@@ -1,0 +1,53 @@
+// Big button
+.big-button {
+	background-color: $purple;
+	border: none;
+	border-bottom: 0.6rem solid darken($purple, 10%);
+	color: $white;
+	font-weight: bold;
+	font-size: $l-size;
+	padding: 2.4rem;
+	width: 100%;
+	margin-bottom: $xl-size;
+	transition: background-color 0.2s ease-in;
+	&:hover {
+		background-color: lighten($purple, 5%);
+	}
+}
+
+.big-button:disabled {
+	opacity: 0.6;
+}
+
+// button
+.button {
+	background-color: $purple;
+	border: none;
+	border-bottom: 0.3rem solid darken($purple, 10%);
+	color: $white;
+	padding: $sm-size;
+	font-weight: 500;
+    transition: background-color 0.1s ease-in;
+    
+    &:hover {
+		background-color: lighten($purple, 5%);
+	}
+}
+.button--link {
+	background: none;
+	border: none;
+	color: $off-white;
+	padding: 0;
+
+	&:hover {
+        background: none;
+	}
+}
+
+@media screen and (max-width:45rem){
+	.big-button{
+		padding: $m-size;
+		margin-bottom: $m-size;
+		font-size: 2.4rem;
+	}
+}

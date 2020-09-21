@@ -1,0 +1,29 @@
+.option{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $l-size;
+    border-bottom: 1px solid lighten($light-blue, 10%);
+}
+
+
+.option-text{
+    display: inline-block;
+    list-style-type:none;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 500;
+    color:$white;
+    margin-right: $sm-size;
+    word-break: break-all;
+}
+
+
+@media screen and (max-width:45rem){
+    .option{
+        padding: $m-size;
+    }
+    .option-text{
+        font-size: 1.8rem;
+    }
+}
