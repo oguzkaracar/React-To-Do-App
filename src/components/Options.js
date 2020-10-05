@@ -4,7 +4,7 @@ import Option from "./Option";
 const Options = (props) => (
 	<div>
 		<div className="widget-header">
-			<h3>Your Options</h3>
+			<h3>Your Todo Lists</h3>
 			<button onClick={props.handleDeleteOptions} className="button button--link">
 				Remove All
 			</button>

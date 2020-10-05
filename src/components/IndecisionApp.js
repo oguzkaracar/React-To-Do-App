@@ -1,96 +1,70 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
-import Action from "./Action";
 import Options from "./Options";
 import AddOption from "./AddOption";
-import OptionModal from "./OptionModal";
 
-export default class IndecisionApp extends React.Component {
-	state = {
-		options: [],
-		selectedOption: undefined,
+const IndecisionApp = () => {
+
+	const [options, setOptions] = useState([]);
+
+	useEffect(() => {
+		const optionData = JSON.parse(localStorage.getItem("options"));
+		if (optionData) {
+			setOptions(optionData);
+		}
+	}, []);
+
+	useEffect(() => {
+		localStorage.setItem("options", JSON.stringify(options));
+	}, [options]);
+
+	const handleDeleteOptions = () => {
+		setOptions([]);
 	};
 
-	// -------------------- Component Methods ----------------------------------
-
-	handleDeleteOptions = () => {
-		this.setState(() => ({ options: [] }));
+	const handleDeleteSelectedOption = () => {
+		setSelectedOption(undefined);
 	};
 
-	handleDeleteSelectedOption = () => {
-		this.setState(() => ({ selectedOption: undefined }));
-	};
-
-	handleDeleteOption = (option) => {
-		this.setState((prevState) => ({
-			options: prevState.options.filter((opt) => {
+	const handleDeleteOption = (option) => {
+		setOptions(() => {
+			return options.filter((opt) => {
 				return opt !== option;
-			}),
-		}));
+			});
+		});
 	};
 
-	handlePick = () => {
-		const randomNum = Math.floor(Math.random() * this.state.options.length);
-		const pickedOption = this.state.options[randomNum];
-		this.setState(() => ({
-			selectedOption: pickedOption,
-		}));
+	const handlePick = () => {
+		const randomNum = Math.floor(Math.random() * options.length);
+		const pickedOption = options[randomNum];
+		setSelectedOption(pickedOption);
 	};
 
-	handleAddOption = (value) => {
+	const handleAddOption = (value) => {
 		if (!value) {
 			return "Enter valid value!";
-		} else if (this.state.options.indexOf(value) > -1) {
+		} else if (options.indexOf(value) > -1) {
 			return "This value already exists.";
 		}
-
-		this.setState((prevState) => ({ options: prevState.options.concat(value) })); // shorthand syntax kullandık..
+		// buraya bak!.
+		setOptions(options.concat(value));
 	};
 
-	// ----- Life Cycle methods --------
-
-	componentDidMount() {
-		try {
-			const json = localStorage.getItem("options");
-			const options = JSON.parse(json);
-			if (options) {
-				this.setState(() => ({ options }));
-			}
-		} catch (error) {}
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		if (prevState.options.length !== this.state.options.length) {
-			const json = JSON.stringify(this.state.options);
-			localStorage.setItem("options", json);
-		}
-	}
-
-	componentWillUnmount() {
-		console.log("componentWillUnmount!");
-	}
-
-	render() {
-		const subtitle = "Put your life in the hands of a computer";
-		return (
-			<div>
-				<Header subtitle={subtitle} />
-				<div className="container">
-					<Action hasOptions={this.state.options.length > 0} handlePick={this.handlePick} />
-					<div className="widget">
-						<Options
-							options={this.state.options}
-							handleDeleteOptions={this.handleDeleteOptions}
-							handleDeleteOption={this.handleDeleteOption}
-						/>
-						<AddOption handleAddOption={this.handleAddOption} />
-					</div>
+	return (
+		<div>
+			<Header />
+			<div className="container">
+				<div className="widget">
+					<Options
+						options={options}
+						handleDeleteOptions={handleDeleteOptions}
+						handleDeleteOption={handleDeleteOption}
+					/>
+					<AddOption handleAddOption={handleAddOption} />
 				</div>
-				<OptionModal
-					selectedOption={this.state.selectedOption}
-					handleDeleteSelectedOption={this.handleDeleteSelectedOption}
-				/>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
+
+export default IndecisionApp;
