@@ -1,35 +1,37 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import OptionsContext from "../context/option-context";
 
-export default class AddOption extends React.Component {
-	state = {
-		error: undefined,
-	};
+const AddOption = () => {
+	const [error, setError] = useState(undefined);
+	const { options, dispatch } = useContext(OptionsContext);
 
-	handleAddOption = (e) => {
+	const handleAddOptionForm = (e) => {
 		e.preventDefault();
 		const inputField = e.target.elements.option;
 		const value = inputField.value.trim();
 
-		const error = this.props.handleAddOption(value);
-		this.setState(() => {
-			return { error };
-		});
-
-		if (!error) {
+		if (!value) {
+			setError("Enter valid value!");
+		} else if (options.indexOf(value) > -1) {
+			setError("This value already exists.");
+		} else {
+			dispatch({ type: "ADD_OPTION", options: value });
 			inputField.value = "";
+			setError(undefined);
 		}
 	};
-	render() {
-		return (
-			<div>
-				<form 
-				className="add-option"
-				onSubmit={this.handleAddOption}>
-					<input type="text" name="option" className="add-option__input"></input>
-					<button type="submit" className="button">Add Option</button>
-				</form>
-				{this.state.error && <p className="add-option-error">{this.state.error}</p>}
-			</div>
-		);
-	}
-}
+
+	return (
+		<div>
+			<form className="add-option" onSubmit={handleAddOptionForm}>
+				<input type="text" name="option" className="add-option__input"></input>
+				<button type="submit" className="button">
+					Add Option
+				</button>
+			</form>
+			{error && <p className="add-option-error">{error}</p>}
+		</div>
+	);
+};
+
+export default AddOption;

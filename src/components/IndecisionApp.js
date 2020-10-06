@@ -1,69 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import Header from "./Header";
 import Options from "./Options";
 import AddOption from "./AddOption";
+import OptionsContext from "../context/option-context";
+import optionReducer from "../reducers/options";
 
 const IndecisionApp = () => {
+	const [options, dispatch] = useReducer(optionReducer, []);
 
-	const [options, setOptions] = useState([]);
-
+	//lifecycle methods.
 	useEffect(() => {
 		const optionData = JSON.parse(localStorage.getItem("options"));
 		if (optionData) {
-			setOptions(optionData);
+			dispatch({ type: "POPULATE_OPTIONS", options: optionData });
 		}
+		return () => {};
 	}, []);
 
 	useEffect(() => {
 		localStorage.setItem("options", JSON.stringify(options));
+		return () => {};
 	}, [options]);
 
-	const handleDeleteOptions = () => {
-		setOptions([]);
-	};
-
-	const handleDeleteSelectedOption = () => {
-		setSelectedOption(undefined);
-	};
-
-	const handleDeleteOption = (option) => {
-		setOptions(() => {
-			return options.filter((opt) => {
-				return opt !== option;
-			});
-		});
-	};
-
-	const handlePick = () => {
-		const randomNum = Math.floor(Math.random() * options.length);
-		const pickedOption = options[randomNum];
-		setSelectedOption(pickedOption);
-	};
-
-	const handleAddOption = (value) => {
-		if (!value) {
-			return "Enter valid value!";
-		} else if (options.indexOf(value) > -1) {
-			return "This value already exists.";
-		}
-		// buraya bak!.
-		setOptions(options.concat(value));
-	};
-
 	return (
-		<div>
+		<OptionsContext.Provider value={{ options, dispatch }}>
 			<Header />
 			<div className="container">
 				<div className="widget">
-					<Options
-						options={options}
-						handleDeleteOptions={handleDeleteOptions}
-						handleDeleteOption={handleDeleteOption}
-					/>
-					<AddOption handleAddOption={handleAddOption} />
+					<Options />
+					<AddOption />
 				</div>
 			</div>
-		</div>
+		</OptionsContext.Provider>
 	);
 };
 
