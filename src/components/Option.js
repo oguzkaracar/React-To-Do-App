@@ -1,18 +1,26 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import OptionsContext from "../context/option-context";
 
 const Option = (props) => {
-	const { options, dispatch } = useContext(OptionsContext);
+	const { options, dispatch, setCheckedStatus } = useContext(OptionsContext);
 
 	// delete option method
-	const handleDeleteOption = (option) => {
-		dispatch({ type: "REMOVE_OPTION", option });
+	const handleDeleteOption = (value) => {
+		dispatch({ type: "REMOVE_OPTION", value });
 	};
 
 	return (
 		<div className="option">
 			<label className="c-custom-checkbox" htmlFor={props.index}>
-				<input type="checkbox" id={props.index} />
+				<input
+					type="checkbox"
+					id={props.index}
+					defaultChecked={props.isChecked}
+					onChange={(e) => {
+						options[e.target.id - 1].isChecked = e.target.checked;
+						setCheckedStatus(e.target.checked);
+					}}
+				/>
 				<svg width="32" height="32" viewBox="-4 -4 39 39" aria-hidden="true" focusable="false">
 					<rect
 						className="cb-bg"

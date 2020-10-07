@@ -3,12 +3,12 @@ const optionReducer = (state,action)=>{
 		case "POPULATE_OPTIONS":
 			return action.options;
 		case "ADD_OPTION":
-            return [...state, action.options];
+			return [...state, action.options];
         case "REMOVE_ALL_OPTIONS":
             return [];
 		case "REMOVE_OPTION":
 			return state.filter((option) => {
-				return option !== action.option;
+				return option.value !== action.value;
 			});
 		default:
 			return state;

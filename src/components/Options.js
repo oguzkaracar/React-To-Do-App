@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import OptionsContext from "../context/option-context";
 import Option from "./Option";
-
-const Options = (props) => {
+import { v4 as uuid } from 'uuid';
+const Options = () => {
 	const { options, dispatch } = useContext(OptionsContext);
 
 	const handleDeleteOptions = () => {
@@ -20,7 +20,7 @@ const Options = (props) => {
 
 			{options.length === 0 && <p className="widget-message">Please add and option!</p>}
 			{options.map((option, index) => (
-				<Option key={option} index={index + 1} optionText={option} />
+				<Option key={uuid()} index={index + 1} optionText={option.value} isChecked={option.isChecked}/>
 			))}
 		</div>
 	);

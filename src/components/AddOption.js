@@ -1,21 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import OptionsContext from "../context/option-context";
 
 const AddOption = () => {
 	const [error, setError] = useState(undefined);
-	const { options, dispatch } = useContext(OptionsContext);
+	const { options, dispatch, isChecked } = useContext(OptionsContext);
+
+	// aynı not iki kere eklenmesin dedik...
+	function findArrayElementByTitle(array, value) {
+		return array.filter((element) => {
+			return element.value === value;
+		});
+	}
 
 	const handleAddOptionForm = (e) => {
 		e.preventDefault();
 		const inputField = e.target.elements.option;
 		const value = inputField.value.trim();
 
+		const existValue = findArrayElementByTitle(options, value);
+
 		if (!value) {
 			setError("Enter valid value!");
-		} else if (options.indexOf(value) > -1) {
+		} else if (existValue.length > 0) {
 			setError("This value already exists.");
 		} else {
-			dispatch({ type: "ADD_OPTION", options: value });
+			// setCheckedStatus(false);
+			dispatch({ type: "ADD_OPTION", options: { value, isChecked: false } });
 			inputField.value = "";
 			setError(undefined);
 		}
