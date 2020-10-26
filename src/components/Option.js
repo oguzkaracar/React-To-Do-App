@@ -1,25 +1,31 @@
 import React, { useContext } from "react";
 import OptionsContext from "../context/option-context";
 
-const Option = (props) => {
-	const { options, dispatch, setCheckedStatus } = useContext(OptionsContext);
+const Option = ({ optionText, index, isChecked }) => {
 
+
+	const { options, dispatch } = useContext(OptionsContext);
+
+	
 	// delete option method
 	const handleDeleteOption = (value) => {
-		dispatch({ type: "REMOVE_OPTION", value });
+		dispatch({ type: "REMOVE_OPTION", payload: value });
+	};
+
+	// dispatch ile reducer a yolla ve orada hallet!!!
+	const handleCheckedStatus = (e) => {
+		dispatch({type:'CHECKED', payload:{value: e.target.value, isChecked:e.target.checked}})
 	};
 
 	return (
 		<div className="option">
-			<label className="c-custom-checkbox" htmlFor={props.index}>
+			<label className="c-custom-checkbox">
 				<input
 					type="checkbox"
-					id={props.index}
-					defaultChecked={props.isChecked}
-					onChange={(e) => {
-						options[e.target.id - 1].isChecked = e.target.checked;
-						setCheckedStatus(e.target.checked);
-					}}
+					id={index}
+					checked={isChecked}
+					value={optionText}
+					onChange={handleCheckedStatus}
 				/>
 				<svg width="32" height="32" viewBox="-4 -4 39 39" aria-hidden="true" focusable="false">
 					<rect
@@ -42,14 +48,14 @@ const Option = (props) => {
 						fill="none"></polyline>
 				</svg>
 				<li className="option-text">
-					{props.index}. {props.optionText}
+					{index}. {optionText}
 				</li>
 			</label>
 
 			<button
 				className="button button--link"
 				onClick={(e) => {
-					handleDeleteOption(props.optionText);
+					handleDeleteOption(optionText);
 				}}>
 				X
 			</button>

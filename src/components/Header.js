@@ -13,6 +13,7 @@ const Header = (props) => {
 
 Header.defaultProps = {
 	title: "ToDo App",
+	subtitle:'Organize your work & life'
 };
 
 export default Header;

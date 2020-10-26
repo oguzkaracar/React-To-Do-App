@@ -2,9 +2,11 @@ import React, { useContext } from "react";
 import OptionsContext from "../context/option-context";
 import Option from "./Option";
 import { v4 as uuid } from 'uuid';
+
 const Options = () => {
 	const { options, dispatch } = useContext(OptionsContext);
 
+	const {value, isChecked} = options;
 	const handleDeleteOptions = () => {
 		dispatch({ type: "REMOVE_ALL_OPTIONS" });
 	};

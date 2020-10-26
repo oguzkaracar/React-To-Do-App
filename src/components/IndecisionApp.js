@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import Header from "./Header";
 import Options from "./Options";
 import AddOption from "./AddOption";
@@ -6,18 +6,15 @@ import OptionsContext from "../context/option-context";
 import optionReducer from "../reducers/options";
 
 
-// !! check yapınca bazen ilk checked işleminde isChecked state'i değişmiyor? localstorage a kesinlikle eklenmiyor.
-
-
 const IndecisionApp = () => {
-	const [options, dispatch] = useReducer(optionReducer, []);
-	const [isChecked, setCheckedStatus] = useState(false);
+
+	const [options, dispatch] = useReducer(optionReducer, [{value:'', isChecked:false}]);
+
 	//lifecycle methods.
 	useEffect(() => {
 		const optionData = JSON.parse(localStorage.getItem("options"));
-		const isCheckedData = JSON.parse(localStorage.getItem('isChecked'));
 		if (optionData) {
-			dispatch({ type: "POPULATE_OPTIONS", options: optionData, isChecked:isCheckedData});
+			dispatch({ type: "POPULATE_OPTIONS", payload:optionData});
 		}
 		return () => {};
 	},[]);
@@ -28,12 +25,12 @@ const IndecisionApp = () => {
 	});
 
 	return (
-		<OptionsContext.Provider value={{ options, dispatch, isChecked, setCheckedStatus }}>
+		<OptionsContext.Provider value={{ options, dispatch}}>
 			<Header />
 			<div className="container">
 				<div className="widget">
 					<Options />
-					<AddOption option={options}/>
+					<AddOption/>
 				</div>
 			</div>
 		</OptionsContext.Provider>

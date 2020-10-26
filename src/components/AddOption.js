@@ -1,32 +1,33 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import OptionsContext from "../context/option-context";
 
 const AddOption = () => {
+	
 	const [error, setError] = useState(undefined);
-	const { options, dispatch, isChecked } = useContext(OptionsContext);
+	const [text, setText] = useState("");
 
-	// aynı not iki kere eklenmesin dedik...
-	function findArrayElementByTitle(array, value) {
-		return array.filter((element) => {
-			return element.value === value;
-		});
-	}
+	const { options, dispatch } = useContext(OptionsContext);
+
+	const handleChange = (e) => {
+		setText(e.target.value);
+	};
 
 	const handleAddOptionForm = (e) => {
 		e.preventDefault();
-		const inputField = e.target.elements.option;
-		const value = inputField.value.trim();
 
-		const existValue = findArrayElementByTitle(options, value);
+		const inputValue = text.trim();
 
-		if (!value) {
+		const existValue = options.filter((option) => {
+			return option.value.includes(inputValue);
+		});
+
+		if (!inputValue) {
 			setError("Enter valid value!");
 		} else if (existValue.length > 0) {
 			setError("This value already exists.");
 		} else {
-			// setCheckedStatus(false);
-			dispatch({ type: "ADD_OPTION", options: { value, isChecked: false } });
-			inputField.value = "";
+			dispatch({ type: "ADD_OPTION", payload: { value: inputValue, isChecked: false } });
+			setText("");
 			setError(undefined);
 		}
 	};
@@ -34,7 +35,7 @@ const AddOption = () => {
 	return (
 		<div>
 			<form className="add-option" onSubmit={handleAddOptionForm}>
-				<input type="text" name="option" className="add-option__input"></input>
+				<input type="text" name="option" className="add-option__input" value={text} onChange={handleChange}></input>
 				<button type="submit" className="button">
 					Add Option
 				</button>
